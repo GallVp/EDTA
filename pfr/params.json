@@ -1,0 +1,7 @@
+{
+    "genome": "/workspace/edta/genomes.list.txt",
+    "anno": true,
+    "outdir": "results",
+    "species": "others",
+    "maxdiv": 40
+}
