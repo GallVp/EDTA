@@ -1,6 +1,7 @@
 include { GUNZIP                                    } from '../modules/gallvp/gunzip/main'
 include { CUSTOM_SHORTENFASTAIDS                    } from '../modules/gallvp/custom/shortenfastaids/main'
 include { CUSTOM_RESTOREGFFIDS                      } from '../modules/gallvp/custom/restoregffids/main'
+include { CUSTOM_RESTOREGFFIDS as RESTORE_TE_ANNO_GFF_IDS   } from '../modules/gallvp/custom/restoregffids/main'
 
 include { LTRHARVEST                                } from '../modules/nf-core/ltrharvest/main'
 include { LTRFINDER                                 } from '../modules/nf-core/ltrfinder/main'
@@ -26,6 +27,7 @@ include { HELITRONSCANNER_POSTPROCESS               } from '../modules/local/hel
 include { COMBINE_INTACT_TES                        } from '../modules/local/combine_intact_tes/main'
 include { PROCESS_K                                 } from '../modules/local/process_k/main'
 include { FINAL_FILTER                              } from '../modules/local/final_filter/main'
+include { POST_LIBRARY_ANNOTATION                   } from '../modules/local/post_library_annotation/main'
 
 include { softwareVersionsToYAML                    } from '../subworkflows/nf-core/utils_nfcore_pipeline/main'
 
@@ -377,18 +379,54 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(FINAL_FILTER.out.versions.first())
 
     // MODULE: CUSTOM_RESTOREGFFIDS
-    ch_gff_tsv_branch               = ch_intact_gff.join(ch_short_ids_tsv)
-                                    | branch { meta, _gff, _tsv ->
-                                        change: meta.changed_ids
-                                        nochange: ! meta.changed_ids
-                                    }
+    ch_gff_tsv_branch                               = ch_intact_gff.join(ch_short_ids_tsv)
+                                                    | branch { meta, _gff, _tsv ->
+                                                        change: meta.changed_ids
+                                                        nochange: ! meta.changed_ids
+                                                    }
 
     CUSTOM_RESTOREGFFIDS (
         ch_gff_tsv_branch.change.map { meta, gff, _tsv -> [ meta, gff ] },
         ch_gff_tsv_branch.change.map { _meta, _gff, tsv -> tsv }
     )
 
-    ch_versions                     = ch_versions.mix(CUSTOM_RESTOREGFFIDS.out.versions.first())
+    ch_versions                                     = ch_versions.mix(CUSTOM_RESTOREGFFIDS.out.versions.first())
+
+    // MODULE: POST_LIBRARY_ANNOTATION
+    ch_post_library_annotation_inputs               = ! params.anno
+                                                    ? Channel.empty()
+                                                    : ch_sanitized_fasta
+                                                    | join(FINAL_FILTER.out.telib_fa)
+                                                    | join(FINAL_FILTER.out.intact_gff)
+                                                    | multiMap { meta, fasta, telib_fa, intact_gff ->
+                                                        genome      : [ meta, fasta ]
+                                                        telib_fa    : telib_fa
+                                                        intact_gff  : intact_gff
+                                                    }
+    
+    POST_LIBRARY_ANNOTATION (
+        ch_post_library_annotation_inputs.genome,
+        ch_post_library_annotation_inputs.telib_fa,
+        ch_post_library_annotation_inputs.intact_gff,
+        params.maxdiv
+    )
+
+    ch_te_anno_gff                                  = POST_LIBRARY_ANNOTATION.out.te_anno
+    ch_versions                                     = ch_versions.mix(POST_LIBRARY_ANNOTATION.out.versions.first())
+
+    // MODULE: RESTORE_TE_ANNO_GFF_IDS
+    ch_te_anno_gff_tsv_branch                       = ch_te_anno_gff.join(ch_short_ids_tsv)
+                                                    | branch { meta, _gff, _tsv ->
+                                                        change: meta.changed_ids
+                                                        nochange: ! meta.changed_ids
+                                                    }
+
+    RESTORE_TE_ANNO_GFF_IDS (
+        ch_te_anno_gff_tsv_branch.change.map { meta, gff, _tsv -> [ meta, gff ] },
+        ch_te_anno_gff_tsv_branch.change.map { _meta, _gff, tsv -> tsv }
+    )
+
+    ch_versions                                     = ch_versions.mix(RESTORE_TE_ANNO_GFF_IDS.out.versions.first())
 
     // Function: Save versions
     ch_versions                                     = ch_versions
