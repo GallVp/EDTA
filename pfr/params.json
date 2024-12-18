@@ -3,5 +3,6 @@
     "anno": true,
     "outdir": "results",
     "species": "others",
-    "maxdiv": 40
+    "maxdiv": 40,
+    "annosine_ext_args": "-a 2 -rpm 0 --copy_number 1 --shift 200"
 }

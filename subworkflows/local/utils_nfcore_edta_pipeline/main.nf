@@ -76,7 +76,6 @@ workflow PIPELINE_INITIALISATION {
                                     | buffer ( size: 2 )
                                 )
                                 | groupTuple
-                                | view
                                 | map { meta, fastas -> validateFastaMetadata ( meta, fastas ) }
     
     emit:
