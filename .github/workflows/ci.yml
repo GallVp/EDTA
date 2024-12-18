@@ -74,6 +74,12 @@ jobs:
         with:
           version: 0.9.2
       
+      - name: Disk space cleanup
+        if: |
+          ( matrix.nf_test_files == 'tests/nf-test/small/main.nf.test' ) &&
+          ( matrix.profile == 'docker' )
+        uses: jlumbroso/free-disk-space@v1.3.1
+      
       - name: Setup apptainer
         if: matrix.profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main

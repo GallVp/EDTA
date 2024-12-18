@@ -19,6 +19,26 @@
           "pattern": "^\\S+\\.f(a|asta|as|sa|na)(\\.gz)?$|^\\S+\\.txt$",
           "format": "file-path"
         },
+        "anno": {
+          "type": "boolean",
+          "fa_icon": "fas fa-question-circle",
+          "description": "Perform whole-genome TE annotation after TE library construction"
+        },
+        "outdir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+          "fa_icon": "fas fa-folder-open"
+        }
+      }
+    },
+    "general_options": {
+      "title": "General options",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "fa_icon": "fas fa-tasks",
+      "properties": {
         "species": {
           "type": "string",
           "default": "others",
@@ -26,11 +46,13 @@
           "description": "Specify the species for identification of TIR candidates",
           "enum": ["Rice", "Maize", "others"]
         },
-        "outdir": {
-          "type": "string",
-          "format": "directory-path",
-          "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-          "fa_icon": "fas fa-folder-open"
+        "maxdiv": {
+          "type": "integer",
+          "default": 40,
+          "fa_icon": "fas fa-percent",
+          "description": "Maximum divergence (0-100%, default: 40) of repeat fragments comparing to library sequences",
+          "minimum": 0,
+          "maximum": 100
         }
       }
     },
@@ -82,6 +104,9 @@
   "allOf": [
     {
       "$ref": "#/$defs/input_output_options"
+    },
+    {
+      "$ref": "#/$defs/general_options"
     },
     {
       "$ref": "#/$defs/cli_arguments_for_tools"

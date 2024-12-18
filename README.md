@@ -23,6 +23,7 @@
   - [Divide and conquer](#divide-and-conquer)
   - [Protips and self-diagnosis](#protips-and-self-diagnosis)
   - [Run with Nextflow](#run-with-nextflow)
+    - [Plant\&Food Users](#plantfood-users)
 - [panEDTA usage](#panedta-usage)
 - [Benchmark](#benchmark)
 - [Citations](#citations)
@@ -237,6 +238,14 @@ If you are new to Nextflow and nf-core, please refer to [this page](https://nf-c
 nextflow run oushujun/EDTA \
   -profile conda,test
   --outdir results
+```
+
+#### Plant&Food Users
+
+Download the pipeline to your `/workspace/$USER` folder. Change the parameters defined in the [pfr/params.json](./pfr/params.json) file. Submit the pipeline to SLURM for execution.
+
+```bash
+sbatch ./pfr_edta
 ```
 
 ## panEDTA usage
