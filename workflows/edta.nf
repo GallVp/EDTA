@@ -393,9 +393,10 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(CUSTOM_RESTOREGFFIDS.out.versions.first())
 
     // MODULE: POST_LIBRARY_ANNOTATION
-    ch_post_library_annotation_inputs               = ! params.anno
-                                                    ? Channel.empty()
-                                                    : ch_sanitized_fasta
+    ch_post_library_annotation_inputs               = ( ! params.anno
+                                                        ? Channel.empty()
+                                                        : ch_sanitized_fasta
+                                                    )
                                                     | join(FINAL_FILTER.out.telib_fa)
                                                     | join(FINAL_FILTER.out.intact_gff)
                                                     | multiMap { meta, fasta, telib_fa, intact_gff ->
