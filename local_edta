@@ -2,6 +2,7 @@
 
 NO_FORMAT="\033[0m"
 C_RED="\033[38;5;9m"
+C_GREEN="\033[38;5;10m"
 F_BOLD="\033[1m"
 
 profile="test_full"
@@ -23,6 +24,8 @@ done
 
 if [[ -z $stub ]]; then
     echo -e "${C_RED}${F_BOLD}Executing without -stub${NO_FORMAT}"
+else
+    echo -e "${C_GREEN}${F_BOLD}Executing with -stub${NO_FORMAT}"
 fi
 
 if [[ $profile == "test_full" ]]; then
