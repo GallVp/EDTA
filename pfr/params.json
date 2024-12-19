@@ -7,5 +7,7 @@
     "species": "others",
     "maxdiv": 40,
     "line_detection_tool": "rm2",
-    "annosine_ext_args": "-a 2 -rpm 0 --copy_number 1 --shift 200"
+    "annosine_ext_args": "-a 2 -rpm 0 --copy_number 1 --shift 200",
+    "create_pan_te_lib": true,
+    "pan_te_fl_copy_number": 3
 }
