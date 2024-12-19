@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+NO_FORMAT="\033[0m"
+C_RED="\033[38;5;9m"
+F_BOLD="\033[1m"
+
+profile="test_full"
+stub=""
+
+for arg in "$@"; do
+    case $arg in
+        -stub)
+            stub="-stub"
+            ;;
+        -test)
+            profile="test"
+            ;;
+        -test_full)
+            profile="test_full"
+            ;;
+    esac
+done
+
+if [[ -z $stub ]]; then
+    echo -e "${C_RED}${F_BOLD}Executing without -stub${NO_FORMAT}"
+fi
+
+if [[ $profile == "test_full" ]]; then
+    echo "Executing test_full"
+else
+    echo "Executing test"
+fi
+
+# Run nextflow with the selected flags
+nextflow run \
+    main.nf \
+    -profile docker,${profile} \
+    -resume \
+    $stub \
+    -c ../nxf-config/resources.config \
+    --outdir results

@@ -1,8 +1,8 @@
 {
-    "small genome": {
+    "small genome -- no LINE -- no annotation": {
         "content": [
             {
-                "successful tasks": 25,
+                "successful tasks": 21,
                 "versions": {
                     "ANNOSINE": {
                         "annosine": "2.0.7"
@@ -68,25 +68,9 @@
                         "TEsorter": "1.4.7",
                         "mdust": "2006.10.17"
                     },
-                    "POST_LIBRARY_ANNOTATION": {
-                        "perl": "v5.32.1",
-                        "repeatmasker": "4.1.5"
-                    },
                     "PROCESS_K": {
                         "perl": "v5.32.1",
                         "repeatmasker": "4.1.7-p1"
-                    },
-                    "REPEATMODELER_BUILDDATABASE": {
-                        "repeatmodeler": "2.0.5"
-                    },
-                    "REPEATMODELER_POSTPROCESS": {
-                        "perl": "v5.32.1",
-                        "trf": 4.09,
-                        "TEsorter": "1.4.7",
-                        "mdust": "2006.10.17"
-                    },
-                    "REPEATMODELER_REPEATMODELER": {
-                        "repeatmodeler": "2.0.5"
                     },
                     "TIRLEARNER": {
                         "TIR-Learner": "v3.0.2"
@@ -105,13 +89,31 @@
                     "genome.short.ids.tsv:md5,642382addc4beba37088b1ebe09d38cf"
                 ],
                 "stable names": [
-                    "genome",
-                    "genome/genome.TEanno.gff3",
-                    "genome/genome.TElib.fa",
-                    "genome/genome.intact.fa",
-                    "genome/genome.intact.gff3",
-                    "genome/genome.short.ids.tsv",
-                    "pipeline_info"
+                    "final",
+                    "final/genome",
+                    "final/genome/genome.TElib.fa",
+                    "final/genome/genome.intact.fa",
+                    "final/genome/genome.intact.gff3",
+                    "final/genome/genome.short.ids.tsv",
+                    "pipeline_info",
+                    "raw",
+                    "raw/filtered",
+                    "raw/filtered/helitron",
+                    "raw/filtered/helitron/genome",
+                    "raw/filtered/helitron/genome/genome.Helitron.intact.anno.list",
+                    "raw/filtered/helitron/genome/genome.Helitron.intact.fa",
+                    "raw/filtered/ltr",
+                    "raw/filtered/ltr/genome",
+                    "raw/filtered/ltr/genome/genome.LTR.fa",
+                    "raw/filtered/ltr/genome/genome.LTR.intact.anno.list",
+                    "raw/filtered/ltr/genome/genome.LTR.intact.fa",
+                    "raw/filtered/tir",
+                    "raw/filtered/tir/genome",
+                    "raw/filtered/tir/genome/genome.TIR.intact.fa",
+                    "stage1",
+                    "stage1/genome",
+                    "stage1/genome/genome.fasta",
+                    "stage1/genome/genome.intact.fasta"
                 ]
             }
         ],
@@ -119,6 +121,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2024-12-18T21:09:42.516395"
+        "timestamp": "2024-12-19T14:52:45.33513"
     }
 }

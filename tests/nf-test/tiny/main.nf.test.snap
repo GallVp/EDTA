@@ -53,7 +53,7 @@
                         "TIR-Learner": "v3.0.2"
                     },
                     "Workflow": {
-                        "oushujun/EDTA": "v2.2.2"
+                        "oushujun/EDTA": "v3.0.0dev"
                     }
                 },
                 "stable paths": [
