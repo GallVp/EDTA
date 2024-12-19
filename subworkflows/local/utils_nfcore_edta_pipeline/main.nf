@@ -37,6 +37,11 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
+    // Custom parameter validation
+    //
+    validateParameters()
+
+    //
     // Create input channels
     //
     ch_genome                   = genome.find(/^\S+\.f(a|asta|as|sa|na)(\.gz)?$/)
@@ -82,9 +87,7 @@ workflow PIPELINE_INITIALISATION {
     genome                      = ch_genome
 }
 
-//
-// Additional validation
-//
+
 def idFromFileName(fileName) {
 
     def trial = ( fileName
@@ -101,6 +104,16 @@ def idFromFileName(fileName) {
     if ( trial == fileName ) { return fileName }
 
     return idFromFileName ( trial )
+}
+
+//
+// Additional validation
+//
+def validateParameters() {
+    
+    if ( params.create_pan_te_lib && ! params.anno ) {
+        error "The --create_pan_te_lib option requires the --anno option to be enabled"
+    }
 }
 
 def validateFastaMetadata(meta, fastas) {

@@ -87,6 +87,27 @@
       },
       "fa_icon": "fas fa-tools"
     },
+    "pante_options": {
+      "title": "PanTE options",
+      "type": "object",
+      "description": "",
+      "default": "",
+      "fa_icon": "fas fa-layer-group",
+      "properties": {
+        "create_pan_te_lib": {
+          "type": "boolean",
+          "fa_icon": "fas fa-question-circle",
+          "description": "Create a PanTE library"
+        },
+        "pan_te_fl_copy_number": {
+          "type": "integer",
+          "default": 3,
+          "fa_icon": "fas fa-hashtag",
+          "minimum": 1,
+          "description": "Minimum number of full-length TE copies in individual genomes to be kept as candidate TEs for the PanTE library"
+        }
+      }
+    },
     "generic_options": {
       "title": "Generic options",
       "type": "object",
@@ -127,6 +148,9 @@
     },
     {
       "$ref": "#/$defs/cli_arguments_for_tools"
+    },
+    {
+      "$ref": "#/$defs/pante_options"
     },
     {
       "$ref": "#/$defs/generic_options"
