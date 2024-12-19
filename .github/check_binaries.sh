@@ -28,3 +28,12 @@ if [[ $EDTA_pl_version != $bin_EDTA_pl_version ]]; then
     echo 'Please synchronize bin/EDTA.pl with EDTA.pl'
     exit 1
 fi
+
+panEDTA_sh_version=$(md5sum panEDTA.sh | cut -f1 -d' ')
+bin_panEDTA_sh_version=$(md5sum bin/panEDTA.sh | cut -f1 -d' ')
+
+if [[ $panEDTA_sh_version != $bin_panEDTA_sh_version ]]; then
+    echo 'panEDTA.sh != bin/panEDTA.sh'
+    echo 'Please synchronize bin/panEDTA.sh with panEDTA.sh'
+    exit 1
+fi
