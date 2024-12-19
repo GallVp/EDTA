@@ -15,6 +15,7 @@ process POST_LIBRARY_ANNOTATION {
 
     output:
     tuple val(meta), path('*.TEanno.gff3')  , emit: te_anno
+    tuple val(meta), path('*.RM.out')       , emit: rm_out
     path "versions.yml"                     , emit: versions
 
     when:
@@ -36,6 +37,10 @@ process POST_LIBRARY_ANNOTATION {
     mv \\
         anno/genome.EDTA.TEanno.gff3 \\
         ${prefix}.TEanno.gff3
+    
+    mv \\
+        anno/genome.EDTA.RM.out \\
+        ${prefix}.RM.out
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -48,6 +53,7 @@ process POST_LIBRARY_ANNOTATION {
     def prefix  = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.TEanno.gff3
+    touch ${prefix}.RM.out
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

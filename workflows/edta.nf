@@ -28,6 +28,7 @@ include { COMBINE_INTACT_TES                        } from '../modules/local/com
 include { PROCESS_K                                 } from '../modules/local/process_k/main'
 include { FINAL_FILTER                              } from '../modules/local/final_filter/main'
 include { POST_LIBRARY_ANNOTATION                   } from '../modules/local/post_library_annotation/main'
+include { MAKE_PAN_TE_LIB                           } from '../modules/local/make_pan_te_lib/main'
 
 include { softwareVersionsToYAML                    } from '../subworkflows/nf-core/utils_nfcore_pipeline/main'
 
@@ -88,7 +89,7 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(LTRHARVEST.out.versions.first())
 
     // MODULE: LTRFINDER
-    LTRFINDER  { ch_sanitized_fasta }
+    LTRFINDER ( ch_sanitized_fasta )
 
     ch_ltrfinder_scn                                = LTRFINDER.out.scn
 
@@ -137,7 +138,7 @@ workflow EDTA {
         ch_ltr_retriever_postprocess_inputs.pass,
         ch_ltr_retriever_postprocess_inputs.p_gff,
         ch_ltr_retriever_postprocess_inputs.defalse,
-        ch_ltr_retriever_postprocess_inputs.ltr,
+        ch_ltr_retriever_postprocess_inputs.ltr
     )
 
     ch_versions                                     = ch_versions.mix(LTR_RETRIEVER_POSTPROCESS.out.versions.first())
@@ -200,7 +201,7 @@ workflow EDTA {
                                                     }
     REPEATMODELER_POSTPROCESS (
         ch_repeatmodeler_postprocess_inputs.genome,
-        ch_repeatmodeler_postprocess_inputs.rm_fa,
+        ch_repeatmodeler_postprocess_inputs.rm_fa
     )
 
     ch_versions                                     = ch_versions.mix(REPEATMODELER_POSTPROCESS.out.versions.first())
@@ -250,7 +251,7 @@ workflow EDTA {
     FORMAT_HELITRONSCANNER_OUT (
         ch_format_helitronscanner_inputs.genome,
         ch_format_helitronscanner_inputs.hel_fa,
-        ch_format_helitronscanner_inputs.rc_hel_fa,
+        ch_format_helitronscanner_inputs.rc_hel_fa
     )
 
     ch_helitronscanner_out_fa                       = FORMAT_HELITRONSCANNER_OUT.out.filtered_fa
@@ -281,7 +282,7 @@ workflow EDTA {
     HELITRONSCANNER_POSTPROCESS (
         ch_helitronscanner_post_inputs.genome,
         ch_helitronscanner_post_inputs.hs_fa,
-        ch_helitronscanner_post_inputs.hs_ext_fa,
+        ch_helitronscanner_post_inputs.hs_ext_fa
     )
 
     ch_versions                                     = ch_versions.mix(HELITRONSCANNER_POSTPROCESS.out.versions.first())
@@ -311,7 +312,7 @@ workflow EDTA {
         ch_combine_intact_tes_inputs.tir_fa,
         ch_combine_intact_tes_inputs.tir_bed,
         ch_combine_intact_tes_inputs.helitron_fa,
-        ch_combine_intact_tes_inputs.helitron_bed,
+        ch_combine_intact_tes_inputs.helitron_bed
     )
 
     ch_versions                                     = ch_versions.mix(COMBINE_INTACT_TES.out.versions.first())
@@ -341,7 +342,7 @@ workflow EDTA {
         ch_process_k_inputs.sine,
         ch_process_k_inputs.line,
         ch_process_k_inputs.tir,
-        ch_process_k_inputs.helitron,
+        ch_process_k_inputs.helitron
     )
 
     ch_versions                                     = ch_versions.mix(PROCESS_K.out.versions.first())
@@ -374,7 +375,7 @@ workflow EDTA {
         ch_final_filter_inputs.genome,
         ch_final_filter_inputs.stg1_fa,
         ch_final_filter_inputs.intact_fa,
-        ch_final_filter_inputs.intact_gff,
+        ch_final_filter_inputs.intact_gff
     )
 
     ch_intact_gff                                   = FINAL_FILTER.out.intact_gff
@@ -420,6 +421,7 @@ workflow EDTA {
     )
 
     ch_te_anno_gff                                  = POST_LIBRARY_ANNOTATION.out.te_anno
+    ch_anno_rm_out                                  = POST_LIBRARY_ANNOTATION.out.rm_out
     ch_versions                                     = ch_versions.mix(POST_LIBRARY_ANNOTATION.out.versions.first())
 
     // MODULE: RESTORE_TE_ANNO_GFF_IDS
@@ -439,6 +441,47 @@ workflow EDTA {
     )
 
     ch_versions                                     = ch_versions.mix(RESTORE_TE_ANNO_GFF_IDS.out.versions.first())
+
+    // MODULE: MAKE_PAN_TE_LIB
+    ch_make_pan_te_lib_inputs                       = ( ! params.create_pan_te_lib
+                                                        ? Channel.empty()
+                                                        : ch_anno_rm_out
+                                                    )
+                                                    | join ( FINAL_FILTER.out.telib_fa )
+                                                    | map { _meta, rm_out, te_lib -> [ [ out: rm_out, lib: te_lib ] ] }
+                                                    | collect
+                                                    | filter { it.size() > 1 }
+                                                    | map { files_map ->
+                                                        def sorted_files = files_map.toSorted() { a, b -> a.out <=> b.out }
+                                                        def names_map = sorted_files.withIndex().collect { files_m, idx -> [ files_m.out.name, "genome${idx + 1}" ] }
+
+                                                        def meta = [ id: 'PanTE', names: names_map ]
+                                                        
+
+                                                        [ meta, sorted_files ]
+                                                    }
+                                                    | multiMap { meta, files_map ->
+                                                        genomes: [ meta, meta.names.collect { it[1] }.join(' ') ]
+                                                        out_files: files_map.collect { it.out }
+                                                        lib_files: files_map.collect { it.lib }
+                                                    }
+
+    MAKE_PAN_TE_LIB (
+        ch_make_pan_te_lib_inputs.genomes,
+        ch_make_pan_te_lib_inputs.out_files,
+        ch_make_pan_te_lib_inputs.lib_files,
+        params.pan_te_fl_copy_number
+    )
+
+    MAKE_PAN_TE_LIB.out.log
+    | map { _meta, log_file ->
+        if ( log_file.text.contains('ERROR') ) {
+            log.warn "An error occurred during the creation of the PanTE library." +
+            " This may be related to a high value of 'pan_te_fl_copy_number'. Try using a lower value." +
+            " Please check the log file ($log_file) for more information."
+        }
+    }
+    ch_versions                                     = ch_versions.mix(MAKE_PAN_TE_LIB.out.versions)
 
     // Function: Save versions
     ch_versions                                     = ch_versions
