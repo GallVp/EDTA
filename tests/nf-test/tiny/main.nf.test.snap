@@ -60,8 +60,9 @@
                     "genome.short.ids.tsv:md5,d7a2af88e8549586e5616bff6a88bd71"
                 ],
                 "stable names": [
-                    "genome",
-                    "genome/genome.short.ids.tsv",
+                    "final",
+                    "final/genome",
+                    "final/genome/genome.short.ids.tsv",
                     "pipeline_info"
                 ]
             }
@@ -70,6 +71,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2024-12-18T11:22:27.159514"
+        "timestamp": "2024-12-19T15:05:50.783522"
     }
 }
