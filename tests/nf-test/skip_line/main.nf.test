@@ -1,15 +1,19 @@
 nextflow_pipeline {
 
-    name "Test with a small genome"
+    name "Test no LINE skip and no annotation with a small genome"
     script "main.nf"
 
-    test("small genome") {
+    test("small genome -- no LINE -- no annotation") {
 
         when {
             params {
-                genome  = "https://raw.githubusercontent.com/oushujun/EDTA/4f0424b8a3ce2caccdd51b4021c61a536fa9ead9/test/genome.fa"
-                anno    = true
-                outdir  = "$outputDir"
+                genome                      = "https://raw.githubusercontent.com/oushujun/EDTA/4f0424b8a3ce2caccdd51b4021c61a536fa9ead9/test/genome.fa"
+                anno                        = false
+                publish_raw_filtered_libs   = true
+                publish_stage1_libs         = true
+                outdir                      = "$outputDir"
+
+                line_detection_tool         = 'none'
             }
         }
 
@@ -23,7 +27,8 @@ nextflow_pipeline {
                     'final/genome/genome.intact.fa',
                     'final/genome/genome.intact.gff3',
                     'final/genome/genome.TElib.fa',
-                    'final/genome/genome.TEanno.gff3'
+                    'raw/**',
+                    'stage1/**'
                 ],
                 null,
                 ['**']

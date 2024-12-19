@@ -24,6 +24,16 @@
           "fa_icon": "fas fa-question-circle",
           "description": "Perform whole-genome TE annotation after TE library construction"
         },
+        "publish_raw_filtered_libs": {
+          "type": "boolean",
+          "fa_icon": "fas fa-question-circle",
+          "description": "Save filtered results from individual tools to the output directory"
+        },
+        "publish_stage1_libs": {
+          "type": "boolean",
+          "fa_icon": "fas fa-question-circle",
+          "description": "Save stage 1 integration results to the output directory"
+        },
         "outdir": {
           "type": "string",
           "format": "directory-path",
@@ -53,6 +63,13 @@
           "description": "Maximum divergence (0-100%, default: 40) of repeat fragments comparing to library sequences",
           "minimum": 0,
           "maximum": 100
+        },
+        "line_detection_tool": {
+          "type": "string",
+          "default": "rm2",
+          "fa_icon": "fas fa-wrench",
+          "description": "Tool to detect LINE elements. Set to 'none' to skip LINE detection.",
+          "enum": ["rm2", "none"]
         }
       }
     },
@@ -68,7 +85,7 @@
           "description": "Arguments for AnnoSINE"
         }
       },
-      "fa_icon": "fas fa-wrench"
+      "fa_icon": "fas fa-tools"
     },
     "generic_options": {
       "title": "Generic options",

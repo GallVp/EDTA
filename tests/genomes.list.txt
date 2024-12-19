@@ -1,0 +1,3 @@
+tests/Ler.test.fa
+tests/Col.test.fa
+tests/Alyrata.test.fa

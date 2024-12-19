@@ -165,7 +165,9 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(ANNOSINE_POSTPROCESS.out.versions.first())
 
     // MODULE: REPEATMODELER_BUILDDATABASE
-    ch_repeatmodeler_inputs                         = ch_sanitized_fasta
+    ch_repeatmodeler_inputs                         = ( params.line_detection_tool == 'none' )
+                                                    ? Channel.empty()
+                                                    : ch_sanitized_fasta
                                                     | map { meta, fasta ->
                                                         def size = fasta.size()
                                                         def size_threshold = 100_000 // bytes -> bp
@@ -379,7 +381,12 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(FINAL_FILTER.out.versions.first())
 
     // MODULE: CUSTOM_RESTOREGFFIDS
-    ch_gff_tsv_branch                               = ch_intact_gff.join(ch_short_ids_tsv)
+    ch_gff_tsv_branch                               = ch_intact_gff
+                                                    | map { meta, gff -> [ meta.id, meta, gff ] }
+                                                    | join(
+                                                        ch_short_ids_tsv.map { meta, tsv -> [ meta.id, tsv ] }
+                                                    )
+                                                    | map { _id, meta, gff, tsv -> [ meta, gff, tsv ] }
                                                     | branch { meta, _gff, _tsv ->
                                                         change: meta.changed_ids
                                                         nochange: ! meta.changed_ids
@@ -416,7 +423,11 @@ workflow EDTA {
     ch_versions                                     = ch_versions.mix(POST_LIBRARY_ANNOTATION.out.versions.first())
 
     // MODULE: RESTORE_TE_ANNO_GFF_IDS
-    ch_te_anno_gff_tsv_branch                       = ch_te_anno_gff.join(ch_short_ids_tsv)
+    ch_te_anno_gff_tsv_branch                       = ch_te_anno_gff.map { meta, gff -> [ meta.id, meta, gff ] }
+                                                    | join(
+                                                        ch_short_ids_tsv.map { meta, tsv -> [ meta.id, tsv ] }
+                                                    )
+                                                    | map { _id, meta, gff, tsv -> [ meta, gff, tsv ] }
                                                     | branch { meta, _gff, _tsv ->
                                                         change: meta.changed_ids
                                                         nochange: ! meta.changed_ids

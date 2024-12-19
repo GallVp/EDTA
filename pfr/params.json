@@ -1,8 +1,11 @@
 {
     "genome": "/workspace/edta/genomes.list.txt",
     "anno": true,
+    "publish_raw_filtered_libs": false,
+    "publish_stage1_libs": false,
     "outdir": "results",
     "species": "others",
     "maxdiv": 40,
+    "line_detection_tool": "rm2",
     "annosine_ext_args": "-a 2 -rpm 0 --copy_number 1 --shift 200"
 }

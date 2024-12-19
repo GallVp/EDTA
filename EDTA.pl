@@ -8,7 +8,7 @@ use Pod::Usage;
 use POSIX qw(strftime);
 use Cwd qw(abs_path);
 
-my $version = "v2.2.2";
+my $version = "v3.0.0dev";
 #v1.0 05/31/2019
 #v1.1 06/05/2019
 #v1.2 06/16/2019
@@ -25,10 +25,10 @@ my $version = "v2.2.2";
 #v2.2.2 08/08/2024
 
 print "
-#########################################################
-##### Extensive de-novo TE Annotator (EDTA) $version  #####
-##### Shujun Ou (shujun.ou.1\@gmail.com)             #####
-#########################################################
+#############################################################
+##### Extensive de-novo TE Annotator (EDTA) $version  	#####
+##### Shujun Ou (shujun.ou.1\@gmail.com)             	#####
+#############################################################
 \n\nParameters: @ARGV\n\n\n";
 
 
