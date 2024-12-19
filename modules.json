@@ -46,7 +46,7 @@
         "gallvp": {
           "fasta_helitronscanner_scan_draw": {
             "branch": "main",
-            "git_sha": "970e3af38229845dd38c13d29b0905651a8e61f0",
+            "git_sha": "cff566517e3bd5d9a5d860fb36db41a87ca4f3ee",
             "installed_by": ["subworkflows"]
           }
         }
