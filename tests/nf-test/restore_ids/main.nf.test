@@ -1,0 +1,64 @@
+nextflow_pipeline {
+
+    name "Test ID restoration with a small genome"
+    script "main.nf"
+
+    test("small genome -- restore IDs") {
+
+        when {
+            params {
+                genome                      = "https://raw.githubusercontent.com/GallVp/EDTA/f3760da7c755be6750bb12485652064b9fbb4885/tests/Col.test.fa"
+                anno                        = true
+                outdir                      = "$outputDir"
+
+                line_detection_tool         = 'none'
+            }
+        }
+
+        then {
+
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                false,
+                [
+                    'pipeline_info/*.{html,json,txt,yml}',
+                    'final/Col.test/Col.test.intact.fa',
+                    'final/Col.test/Col.test.intact.gff3',
+                    'final/Col.test/Col.test.TElib.fa',
+                    'final/Col.test/Col.test.TEanno.gff3'
+                ],
+                null,
+                ['**']
+            )
+
+            def stable_name = getAllFilesFromDir(
+                params.outdir,
+                true,
+                [
+                    'pipeline_info/*.{html,json,txt,yml}'
+                ],
+                null,
+                ['**']
+            )
+
+            def te_lib_count = file("$outputDir/final/Col.test/Col.test.TElib.fa").readLines().findAll { it.startsWith('>') }.size()
+            def intact_lib_count = file("$outputDir/final/Col.test/Col.test.intact.fa").readLines().findAll { it.startsWith('>') }.size()
+
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    [
+                        'successful tasks': workflow.trace.succeeded().size(),
+                        'versions': removeNextflowVersion("$outputDir/pipeline_info/software_versions.yml"),
+                        'stable paths': stable_path,
+                        'stable names': getRelativePath(stable_name, outputDir)
+                    ]
+                ).match() },
+                { assert Math.abs(te_lib_count - 45) <= 5.0 },
+                { assert Math.abs(intact_lib_count - 42) <= 5.0 }
+            )
+        }
+
+    }
+
+}

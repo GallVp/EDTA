@@ -1,0 +1,119 @@
+{
+    "small genome -- restore IDs": {
+        "content": [
+            {
+                "successful tasks": 24,
+                "versions": {
+                    "ANNOSINE": {
+                        "annosine": "2.0.7"
+                    },
+                    "CAT_CAT": {
+                        "pigz": "2.3.4"
+                    },
+                    "COMBINE_INTACT_TES": {
+                        "perl": "v5.32.1"
+                    },
+                    "CUSTOM_RESTOREGFFIDS": {
+                        "python": "3.10.2"
+                    },
+                    "CUSTOM_SHORTENFASTAIDS": {
+                        "python": "3.8.13",
+                        "biopython": 1.75
+                    },
+                    "FINAL_FILTER": {
+                        "perl": "v5.32.1",
+                        "repeatmasker": "4.1.7-p1"
+                    },
+                    "FORMAT_HELITRONSCANNER_OUT": {
+                        "perl": "v5.32.1"
+                    },
+                    "FORMAT_HELITRONSCANNER_OUT_EXT": {
+                        "perl": "v5.32.1"
+                    },
+                    "HELITRONSCANNER_DRAW": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "HELITRONSCANNER_DRAW_RC": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "HELITRONSCANNER_POSTPROCESS": {
+                        "perl": "v5.32.1",
+                        "trf": 4.09,
+                        "TEsorter": "1.4.7",
+                        "mdust": "2006.10.17"
+                    },
+                    "HELITRONSCANNER_SCAN_HEAD": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "HELITRONSCANNER_SCAN_HEAD_RC": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "HELITRONSCANNER_SCAN_TAIL": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "HELITRONSCANNER_SCAN_TAIL_RC": {
+                        "helitronscanner": "V1.1"
+                    },
+                    "LTRFINDER": {
+                        "LTR_FINDER_parallel": "v1.1",
+                        "ltr_finder": "v1.07"
+                    },
+                    "LTRHARVEST": {
+                        "LTR_HARVEST_parallel": "v1.1",
+                        "genometools": "1.6.5"
+                    },
+                    "LTRRETRIEVER_LTRRETRIEVER": {
+                        "LTR_retriever": "v2.9.9"
+                    },
+                    "LTR_RETRIEVER_POSTPROCESS": {
+                        "perl": "v5.32.1",
+                        "trf": 4.09,
+                        "TEsorter": "1.4.7",
+                        "mdust": "2006.10.17"
+                    },
+                    "POST_LIBRARY_ANNOTATION": {
+                        "perl": "v5.32.1",
+                        "repeatmasker": "4.1.5"
+                    },
+                    "PROCESS_K": {
+                        "perl": "v5.32.1",
+                        "repeatmasker": "4.1.7-p1"
+                    },
+                    "RESTORE_TE_ANNO_GFF_IDS": {
+                        "python": "3.10.2"
+                    },
+                    "TIRLEARNER": {
+                        "TIR-Learner": "v3.0.2"
+                    },
+                    "TIR_LEARNER_POSTPROCESS": {
+                        "perl": "v5.32.1",
+                        "trf": 4.09,
+                        "TEsorter": "1.4.7",
+                        "mdust": "2006.10.17"
+                    },
+                    "Workflow": {
+                        "oushujun/EDTA": "v3.0.0dev"
+                    }
+                },
+                "stable paths": [
+                    "Col.test.short.ids.tsv:md5,c5a04561f4be1e925631ad0f02e4992b"
+                ],
+                "stable names": [
+                    "final",
+                    "final/Col.test",
+                    "final/Col.test/Col.test.TEanno.gff3",
+                    "final/Col.test/Col.test.TElib.fa",
+                    "final/Col.test/Col.test.intact.fa",
+                    "final/Col.test/Col.test.intact.gff3",
+                    "final/Col.test/Col.test.short.ids.tsv",
+                    "pipeline_info"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2024-12-19T16:25:40.059478"
+    }
+}
